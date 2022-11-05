@@ -60,6 +60,7 @@
     },
     "sapux": [
         "app/employee",
+        "app/project",
         "app/accounting"
     ]
 }

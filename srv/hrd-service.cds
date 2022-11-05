@@ -26,7 +26,7 @@ service HRService {
 
     @readonly
     @cds.redirection.target
-    entity Accounting          as projection on hrd.Project{
+    entity Accounting          as projection on hrd.Project {
         *,
         employees : redirected to ProjectsInfo_empl
     };
@@ -42,6 +42,10 @@ annotate HRService.Employee with @odata.draft.enabled;
 
 
 annotate HRService.ProjectsInfo_proj {
+    // ID        @Common : {
+    //     Text            : projects.projectTitle,
+    //     TextArrangement : #TextOnly,
+    // };
     projects @(Common : {
         Text            : projects.projectTitle,
         TextArrangement : #TextOnly,
@@ -58,6 +62,10 @@ annotate HRService.ProjectsInfo_proj {
 }
 
 annotate HRService.ProjectsInfo_empl {
+    // ID        @Common : {
+    //     Text            : employees.fullName,
+    //     TextArrangement : #TextOnly,
+    // };
     employees @(Common : {
         Text            : employees.fullName,
         TextArrangement : #TextOnly,

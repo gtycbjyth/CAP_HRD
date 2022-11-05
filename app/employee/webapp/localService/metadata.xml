@@ -1,0 +1,852 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+        <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="HRService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Employee" EntityType="HRService.Employee">
+                    <NavigationPropertyBinding Path="country" Target="Countries"/>
+                    <NavigationPropertyBinding Path="projects" Target="ProjectsInfo_proj"/>
+                    <NavigationPropertyBinding Path="jobStatus" Target="JobStatuses"/>
+                    <NavigationPropertyBinding Path="jobFunction" Target="JobFunction"/>
+                    <NavigationPropertyBinding Path="languageLevel" Target="LanguageLevel"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="Employee"/>
+                </EntitySet>
+                <EntitySet Name="Project" EntityType="HRService.Project">
+                    <NavigationPropertyBinding Path="employees" Target="ProjectsInfo_empl"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="Project"/>
+                </EntitySet>
+                <EntitySet Name="ProjectsInfo_empl" EntityType="HRService.ProjectsInfo_empl">
+                    <NavigationPropertyBinding Path="employees" Target="Employee"/>
+                    <NavigationPropertyBinding Path="projects" Target="Accounting"/>
+                    <NavigationPropertyBinding Path="salary_currency" Target="Currencies"/>
+                    <NavigationPropertyBinding Path="local_currency" Target="Currencies"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="ProjectsInfo_empl"/>
+                </EntitySet>
+                <EntitySet Name="ProjectsInfo_proj" EntityType="HRService.ProjectsInfo_proj">
+                    <NavigationPropertyBinding Path="employees" Target="Employee"/>
+                    <NavigationPropertyBinding Path="projects" Target="Project"/>
+                    <NavigationPropertyBinding Path="salary_currency" Target="Currencies"/>
+                    <NavigationPropertyBinding Path="local_currency" Target="Currencies"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="ProjectsInfo_proj"/>
+                </EntitySet>
+                <EntitySet Name="Accounting" EntityType="HRService.Accounting">
+                    <NavigationPropertyBinding Path="employees" Target="ProjectsInfo_empl"/>
+                </EntitySet>
+                <EntitySet Name="AssesmentDepartment" EntityType="HRService.AssesmentDepartment">
+                    <NavigationPropertyBinding Path="employee" Target="Employee"/>
+                    <NavigationPropertyBinding Path="level" Target="LanguageLevel"/>
+                </EntitySet>
+                <EntitySet Name="LanguageLevel" EntityType="HRService.LanguageLevel"/>
+                <EntitySet Name="JobFunction" EntityType="HRService.JobFunction"/>
+                <EntitySet Name="JobStatuses" EntityType="HRService.JobStatuses"/>
+                <EntitySet Name="Countries" EntityType="HRService.Countries">
+                    <NavigationPropertyBinding Path="texts" Target="Countries_texts"/>
+                    <NavigationPropertyBinding Path="localized" Target="Countries_texts"/>
+                </EntitySet>
+                <EntitySet Name="Currencies" EntityType="HRService.Currencies">
+                    <NavigationPropertyBinding Path="texts" Target="Currencies_texts"/>
+                    <NavigationPropertyBinding Path="localized" Target="Currencies_texts"/>
+                </EntitySet>
+                <EntitySet Name="Countries_texts" EntityType="HRService.Countries_texts"/>
+                <EntitySet Name="Currencies_texts" EntityType="HRService.Currencies_texts"/>
+            </EntityContainer>
+            <EntityType Name="Employee">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="firstName" Type="Edm.String" MaxLength="20"/>
+                <Property Name="lastName" Type="Edm.String" MaxLength="20"/>
+                <Property Name="birthday" Type="Edm.Date"/>
+                <NavigationProperty Name="country" Type="HRService.Countries">
+                    <ReferentialConstraint Property="country_code" ReferencedProperty="code"/>
+                </NavigationProperty>
+                <Property Name="country_code" Type="Edm.String" MaxLength="3"/>
+                <NavigationProperty Name="projects" Type="Collection(HRService.ProjectsInfo_proj)" Partner="employees">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="jobStatus" Type="HRService.JobStatuses">
+                    <ReferentialConstraint Property="jobStatus_status" ReferencedProperty="status"/>
+                </NavigationProperty>
+                <Property Name="jobStatus_status" Type="Edm.String" MaxLength="20"/>
+                <NavigationProperty Name="jobFunction" Type="HRService.JobFunction">
+                    <ReferentialConstraint Property="jobFunction_title" ReferencedProperty="title"/>
+                </NavigationProperty>
+                <Property Name="jobFunction_title" Type="Edm.String" MaxLength="20"/>
+                <Property Name="imageUrl" Type="Edm.String"/>
+                <Property Name="image" Type="Edm.Stream"/>
+                <NavigationProperty Name="languageLevel" Type="HRService.LanguageLevel">
+                    <ReferentialConstraint Property="languageLevel_level" ReferencedProperty="level"/>
+                </NavigationProperty>
+                <Property Name="languageLevel_level" Type="Edm.String" DefaultValue="N/A"/>
+                <Property Name="assesmentDate" Type="Edm.Date"/>
+                <Property Name="fullName" Type="Edm.String"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="HRService.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="HRService.Employee"/>
+            </EntityType>
+            <EntityType Name="Project">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="projectTitle" Type="Edm.String" MaxLength="50"/>
+                <NavigationProperty Name="employees" Type="Collection(HRService.ProjectsInfo_empl)">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <Property Name="projectLogo" Type="Edm.Stream"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="HRService.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="HRService.Project"/>
+            </EntityType>
+            <EntityType Name="ProjectsInfo_empl">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <NavigationProperty Name="employees" Type="HRService.Employee">
+                    <ReferentialConstraint Property="employees_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="employees_ID" Type="Edm.Guid"/>
+                <NavigationProperty Name="projects" Type="HRService.Accounting">
+                    <ReferentialConstraint Property="projects_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="projects_ID" Type="Edm.Guid"/>
+                <Property Name="salary" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="local_salary" Type="Edm.Decimal" Scale="variable"/>
+                <NavigationProperty Name="salary_currency" Type="HRService.Currencies">
+                    <ReferentialConstraint Property="salary_currency_code" ReferencedProperty="code"/>
+                </NavigationProperty>
+                <Property Name="salary_currency_code" Type="Edm.String" MaxLength="3"/>
+                <NavigationProperty Name="local_currency" Type="HRService.Currencies">
+                    <ReferentialConstraint Property="local_currency_code" ReferencedProperty="code"/>
+                </NavigationProperty>
+                <Property Name="local_currency_code" Type="Edm.String" MaxLength="3"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="HRService.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="HRService.ProjectsInfo_empl"/>
+            </EntityType>
+            <EntityType Name="ProjectsInfo_proj">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <NavigationProperty Name="employees" Type="HRService.Employee" Partner="projects">
+                    <ReferentialConstraint Property="employees_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="employees_ID" Type="Edm.Guid"/>
+                <NavigationProperty Name="projects" Type="HRService.Project">
+                    <ReferentialConstraint Property="projects_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="projects_ID" Type="Edm.Guid"/>
+                <Property Name="salary" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="local_salary" Type="Edm.Decimal" Scale="variable"/>
+                <NavigationProperty Name="salary_currency" Type="HRService.Currencies">
+                    <ReferentialConstraint Property="salary_currency_code" ReferencedProperty="code"/>
+                </NavigationProperty>
+                <Property Name="salary_currency_code" Type="Edm.String" MaxLength="3"/>
+                <NavigationProperty Name="local_currency" Type="HRService.Currencies">
+                    <ReferentialConstraint Property="local_currency_code" ReferencedProperty="code"/>
+                </NavigationProperty>
+                <Property Name="local_currency_code" Type="Edm.String" MaxLength="3"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="HRService.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="HRService.ProjectsInfo_proj"/>
+            </EntityType>
+            <EntityType Name="Accounting">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="projectTitle" Type="Edm.String" MaxLength="50"/>
+                <NavigationProperty Name="employees" Type="Collection(HRService.ProjectsInfo_empl)">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <Property Name="projectLogo" Type="Edm.Stream"/>
+            </EntityType>
+            <EntityType Name="AssesmentDepartment">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <NavigationProperty Name="employee" Type="HRService.Employee">
+                    <ReferentialConstraint Property="employee_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="employee_ID" Type="Edm.Guid"/>
+                <NavigationProperty Name="level" Type="HRService.LanguageLevel">
+                    <ReferentialConstraint Property="level_level" ReferencedProperty="level"/>
+                </NavigationProperty>
+                <Property Name="level_level" Type="Edm.String" DefaultValue="N/A"/>
+                <Property Name="date" Type="Edm.Date"/>
+                <Property Name="isOutdated" Type="Edm.Boolean"/>
+            </EntityType>
+            <EntityType Name="LanguageLevel">
+                <Key>
+                    <PropertyRef Name="level"/>
+                </Key>
+                <Property Name="level" Type="Edm.String" Nullable="false" DefaultValue="N/A"/>
+                <Property Name="criticality" Type="Edm.Int32"/>
+            </EntityType>
+            <EntityType Name="JobFunction">
+                <Key>
+                    <PropertyRef Name="title"/>
+                </Key>
+                <Property Name="title" Type="Edm.String" MaxLength="20" Nullable="false"/>
+            </EntityType>
+            <EntityType Name="JobStatuses">
+                <Key>
+                    <PropertyRef Name="status"/>
+                </Key>
+                <Property Name="status" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="criticality" Type="Edm.Int32"/>
+            </EntityType>
+            <EntityType Name="Countries">
+                <Key>
+                    <PropertyRef Name="code"/>
+                </Key>
+                <Property Name="name" Type="Edm.String" MaxLength="255"/>
+                <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="code" Type="Edm.String" MaxLength="3" Nullable="false"/>
+                <NavigationProperty Name="texts" Type="Collection(HRService.Countries_texts)">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="localized" Type="HRService.Countries_texts">
+                    <ReferentialConstraint Property="code" ReferencedProperty="code"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="Currencies">
+                <Key>
+                    <PropertyRef Name="code"/>
+                </Key>
+                <Property Name="name" Type="Edm.String" MaxLength="255"/>
+                <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="code" Type="Edm.String" MaxLength="3" Nullable="false"/>
+                <Property Name="symbol" Type="Edm.String" MaxLength="5"/>
+                <Property Name="numcode" Type="Edm.Int32"/>
+                <Property Name="exponent" Type="Edm.Int32"/>
+                <Property Name="minor" Type="Edm.String"/>
+                <NavigationProperty Name="texts" Type="Collection(HRService.Currencies_texts)">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="localized" Type="HRService.Currencies_texts">
+                    <ReferentialConstraint Property="code" ReferencedProperty="code"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="DraftAdministrativeData">
+                <Key>
+                    <PropertyRef Name="DraftUUID"/>
+                </Key>
+                <Property Name="DraftUUID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="CreatedByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="DraftIsCreatedByMe" Type="Edm.Boolean"/>
+                <Property Name="LastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="LastChangedByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="InProcessByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="DraftIsProcessedByMe" Type="Edm.Boolean"/>
+            </EntityType>
+            <EntityType Name="Countries_texts">
+                <Key>
+                    <PropertyRef Name="locale"/>
+                    <PropertyRef Name="code"/>
+                </Key>
+                <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+                <Property Name="name" Type="Edm.String" MaxLength="255"/>
+                <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="code" Type="Edm.String" MaxLength="3" Nullable="false"/>
+            </EntityType>
+            <EntityType Name="Currencies_texts">
+                <Key>
+                    <PropertyRef Name="locale"/>
+                    <PropertyRef Name="code"/>
+                </Key>
+                <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+                <Property Name="name" Type="Edm.String" MaxLength="255"/>
+                <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="code" Type="Edm.String" MaxLength="3" Nullable="false"/>
+            </EntityType>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="HRService.Employee"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="HRService.Employee"/>
+            </Action>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="HRService.Project"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="HRService.Project"/>
+            </Action>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="HRService.ProjectsInfo_empl"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="HRService.ProjectsInfo_empl"/>
+            </Action>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="HRService.ProjectsInfo_proj"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="HRService.ProjectsInfo_proj"/>
+            </Action>
+            <Action Name="draftActivate" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="HRService.Employee"/>
+                <ReturnType Type="HRService.Employee"/>
+            </Action>
+            <Action Name="draftActivate" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="HRService.Project"/>
+                <ReturnType Type="HRService.Project"/>
+            </Action>
+            <Action Name="draftEdit" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="HRService.Employee"/>
+                <Parameter Name="PreserveChanges" Type="Edm.Boolean"/>
+                <ReturnType Type="HRService.Employee"/>
+            </Action>
+            <Action Name="draftEdit" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="HRService.Project"/>
+                <Parameter Name="PreserveChanges" Type="Edm.Boolean"/>
+                <ReturnType Type="HRService.Project"/>
+            </Action>
+            <Annotations Target="HRService.EntityContainer/Employee">
+                <Annotation Term="Common.DraftRoot">
+                    <Record Type="Common.DraftRootType">
+                        <PropertyValue Property="ActivationAction" String="HRService.draftActivate"/>
+                        <PropertyValue Property="EditAction" String="HRService.draftEdit"/>
+                        <PropertyValue Property="PreparationAction" String="HRService.draftPrepare"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="HRService.Employee/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                </Annotations>
+                <Annotations Target="HRService.Employee/createdBy">
+                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                    <Annotation Term="Core.Immutable" Bool="true"/>
+                    <Annotation Term="Core.Computed" Bool="true"/>
+                    <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                        </Annotations>
+                        <Annotations Target="HRService.Employee/modifiedAt">
+                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                            <Annotation Term="Core.Computed" Bool="true"/>
+                            <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                            </Annotations>
+                            <Annotations Target="HRService.Employee/modifiedBy">
+                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                <Annotation Term="Core.Computed" Bool="true"/>
+                                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                    <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                    </Annotations>
+                                    <Annotations Target="HRService.Employee/country">
+                                        <Annotation Term="Common.Label" String="{i18n>Country}"/>
+                                            <Annotation Term="Core.Description" String="{i18n>CountryCode.Description}"/>
+                                            </Annotations>
+                                            <Annotations Target="HRService.Employee/country_code">
+                                                <Annotation Term="Common.Label" String="{i18n>Country}"/>
+                                                    <Annotation Term="Common.ValueList">
+                                                        <Record Type="Common.ValueListType">
+                                                            <PropertyValue Property="Label" String="{i18n>Country}"/>
+                                                                <PropertyValue Property="CollectionPath" String="Countries"/>
+                                                                <PropertyValue Property="Parameters">
+                                                                    <Collection>
+                                                                        <Record Type="Common.ValueListParameterInOut">
+                                                                            <PropertyValue Property="LocalDataProperty" PropertyPath="country_code"/>
+                                                                            <PropertyValue Property="ValueListProperty" String="code"/>
+                                                                        </Record>
+                                                                        <Record Type="Common.ValueListParameterDisplayOnly">
+                                                                            <PropertyValue Property="ValueListProperty" String="name"/>
+                                                                        </Record>
+                                                                    </Collection>
+                                                                </PropertyValue>
+                                                            </Record>
+                                                        </Annotation>
+                                                        <Annotation Term="Core.Description" String="{i18n>CountryCode.Description}"/>
+                                                        </Annotations>
+                                                        <Annotations Target="HRService.Employee/image">
+                                                            <Annotation Term="Core.IsURL" Bool="true"/>
+                                                            <Annotation Term="Core.MediaType" String="image/jpg"/>
+                                                        </Annotations>
+                                                        <Annotations Target="HRService.Employee/fullName">
+                                                            <Annotation Term="Core.Computed" Bool="true"/>
+                                                        </Annotations>
+                                                        <Annotations Target="HRService.Employee/IsActiveEntity">
+                                                            <Annotation Term="UI.Hidden" Bool="true"/>
+                                                        </Annotations>
+                                                        <Annotations Target="HRService.Employee/HasActiveEntity">
+                                                            <Annotation Term="UI.Hidden" Bool="true"/>
+                                                        </Annotations>
+                                                        <Annotations Target="HRService.Employee/HasDraftEntity">
+                                                            <Annotation Term="UI.Hidden" Bool="true"/>
+                                                        </Annotations>
+                                                        <Annotations Target="HRService.Employee/DraftAdministrativeData">
+                                                            <Annotation Term="UI.Hidden" Bool="true"/>
+                                                        </Annotations>
+                                                        <Annotations Target="HRService.EntityContainer/Project">
+                                                            <Annotation Term="Common.DraftRoot">
+                                                                <Record Type="Common.DraftRootType">
+                                                                    <PropertyValue Property="ActivationAction" String="HRService.draftActivate"/>
+                                                                    <PropertyValue Property="EditAction" String="HRService.draftEdit"/>
+                                                                    <PropertyValue Property="PreparationAction" String="HRService.draftPrepare"/>
+                                                                </Record>
+                                                            </Annotation>
+                                                        </Annotations>
+                                                        <Annotations Target="HRService.Project/createdAt">
+                                                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                            <Annotation Term="Core.Immutable" Bool="true"/>
+                                                            <Annotation Term="Core.Computed" Bool="true"/>
+                                                            <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                                                            </Annotations>
+                                                            <Annotations Target="HRService.Project/createdBy">
+                                                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                <Annotation Term="Core.Immutable" Bool="true"/>
+                                                                <Annotation Term="Core.Computed" Bool="true"/>
+                                                                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                                    <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                                                                    </Annotations>
+                                                                    <Annotations Target="HRService.Project/modifiedAt">
+                                                                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                                        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                                                                        </Annotations>
+                                                                        <Annotations Target="HRService.Project/modifiedBy">
+                                                                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                            <Annotation Term="Core.Computed" Bool="true"/>
+                                                                            <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                                                <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                                                                </Annotations>
+                                                                                <Annotations Target="HRService.Project/projectLogo">
+                                                                                    <Annotation Term="Core.MediaType" String="image/jpg"/>
+                                                                                </Annotations>
+                                                                                <Annotations Target="HRService.Project/IsActiveEntity">
+                                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                </Annotations>
+                                                                                <Annotations Target="HRService.Project/HasActiveEntity">
+                                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                </Annotations>
+                                                                                <Annotations Target="HRService.Project/HasDraftEntity">
+                                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                </Annotations>
+                                                                                <Annotations Target="HRService.Project/DraftAdministrativeData">
+                                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                </Annotations>
+                                                                                <Annotations Target="HRService.EntityContainer/ProjectsInfo_empl">
+                                                                                    <Annotation Term="Common.DraftNode">
+                                                                                        <Record Type="Common.DraftNodeType">
+                                                                                            <PropertyValue Property="PreparationAction" String="HRService.draftPrepare"/>
+                                                                                        </Record>
+                                                                                    </Annotation>
+                                                                                </Annotations>
+                                                                                <Annotations Target="HRService.ProjectsInfo_empl/createdAt">
+                                                                                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                                    <Annotation Term="Core.Immutable" Bool="true"/>
+                                                                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                    <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                                                                                    </Annotations>
+                                                                                    <Annotations Target="HRService.ProjectsInfo_empl/createdBy">
+                                                                                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                                        <Annotation Term="Core.Immutable" Bool="true"/>
+                                                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                                                            <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                                                                                            </Annotations>
+                                                                                            <Annotations Target="HRService.ProjectsInfo_empl/modifiedAt">
+                                                                                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                                                <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                                <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                                                                                                </Annotations>
+                                                                                                <Annotations Target="HRService.ProjectsInfo_empl/modifiedBy">
+                                                                                                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                                    <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                                                                        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                                                                                        </Annotations>
+                                                                                                        <Annotations Target="HRService.ProjectsInfo_empl/employees_ID">
+                                                                                                            <Annotation Term="Common.Text" Path="employees/fullName">
+                                                                                                                <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                                                                                                            </Annotation>
+                                                                                                            <Annotation Term="Common.ValueList">
+                                                                                                                <Record Type="Common.ValueListType">
+                                                                                                                    <PropertyValue Property="CollectionPath" String="Employee"/>
+                                                                                                                    <PropertyValue Property="Parameters">
+                                                                                                                        <Collection>
+                                                                                                                            <Record Type="Common.ValueListParameterInOut">
+                                                                                                                                <PropertyValue Property="LocalDataProperty" PropertyPath="employees_ID"/>
+                                                                                                                                <PropertyValue Property="ValueListProperty" String="ID"/>
+                                                                                                                            </Record>
+                                                                                                                            <Record Type="Common.ValueListParameterDisplayOnly">
+                                                                                                                                <PropertyValue Property="ValueListProperty" String="fullName"/>
+                                                                                                                            </Record>
+                                                                                                                            <Record Type="Common.ValueListParameterDisplayOnly">
+                                                                                                                                <PropertyValue Property="ValueListProperty" String="jobFunction_title"/>
+                                                                                                                            </Record>
+                                                                                                                            <Record Type="Common.ValueListParameterDisplayOnly">
+                                                                                                                                <PropertyValue Property="ValueListProperty" String="jobStatus_status"/>
+                                                                                                                            </Record>
+                                                                                                                        </Collection>
+                                                                                                                    </PropertyValue>
+                                                                                                                </Record>
+                                                                                                            </Annotation>
+                                                                                                        </Annotations>
+                                                                                                        <Annotations Target="HRService.ProjectsInfo_empl/salary_currency">
+                                                                                                            <Annotation Term="Common.Label" String="{i18n>Currency}"/>
+                                                                                                                <Annotation Term="Core.Description" String="{i18n>CurrencyCode.Description}"/>
+                                                                                                                </Annotations>
+                                                                                                                <Annotations Target="HRService.ProjectsInfo_empl/salary_currency_code">
+                                                                                                                    <Annotation Term="Common.Label" String="{i18n>Currency}"/>
+                                                                                                                        <Annotation Term="Common.ValueList">
+                                                                                                                            <Record Type="Common.ValueListType">
+                                                                                                                                <PropertyValue Property="Label" String="{i18n>Currency}"/>
+                                                                                                                                    <PropertyValue Property="CollectionPath" String="Currencies"/>
+                                                                                                                                    <PropertyValue Property="Parameters">
+                                                                                                                                        <Collection>
+                                                                                                                                            <Record Type="Common.ValueListParameterInOut">
+                                                                                                                                                <PropertyValue Property="LocalDataProperty" PropertyPath="salary_currency_code"/>
+                                                                                                                                                <PropertyValue Property="ValueListProperty" String="code"/>
+                                                                                                                                            </Record>
+                                                                                                                                            <Record Type="Common.ValueListParameterDisplayOnly">
+                                                                                                                                                <PropertyValue Property="ValueListProperty" String="name"/>
+                                                                                                                                            </Record>
+                                                                                                                                        </Collection>
+                                                                                                                                    </PropertyValue>
+                                                                                                                                </Record>
+                                                                                                                            </Annotation>
+                                                                                                                            <Annotation Term="Core.Description" String="{i18n>CurrencyCode.Description}"/>
+                                                                                                                            </Annotations>
+                                                                                                                            <Annotations Target="HRService.ProjectsInfo_empl/local_currency">
+                                                                                                                                <Annotation Term="Common.Label" String="{i18n>Currency}"/>
+                                                                                                                                    <Annotation Term="Core.Description" String="{i18n>CurrencyCode.Description}"/>
+                                                                                                                                    </Annotations>
+                                                                                                                                    <Annotations Target="HRService.ProjectsInfo_empl/local_currency_code">
+                                                                                                                                        <Annotation Term="Common.Label" String="{i18n>Currency}"/>
+                                                                                                                                            <Annotation Term="Common.ValueList">
+                                                                                                                                                <Record Type="Common.ValueListType">
+                                                                                                                                                    <PropertyValue Property="Label" String="{i18n>Currency}"/>
+                                                                                                                                                        <PropertyValue Property="CollectionPath" String="Currencies"/>
+                                                                                                                                                        <PropertyValue Property="Parameters">
+                                                                                                                                                            <Collection>
+                                                                                                                                                                <Record Type="Common.ValueListParameterInOut">
+                                                                                                                                                                    <PropertyValue Property="LocalDataProperty" PropertyPath="local_currency_code"/>
+                                                                                                                                                                    <PropertyValue Property="ValueListProperty" String="code"/>
+                                                                                                                                                                </Record>
+                                                                                                                                                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                                                                                                                                                    <PropertyValue Property="ValueListProperty" String="name"/>
+                                                                                                                                                                </Record>
+                                                                                                                                                            </Collection>
+                                                                                                                                                        </PropertyValue>
+                                                                                                                                                    </Record>
+                                                                                                                                                </Annotation>
+                                                                                                                                                <Annotation Term="Core.Description" String="{i18n>CurrencyCode.Description}"/>
+                                                                                                                                                </Annotations>
+                                                                                                                                                <Annotations Target="HRService.ProjectsInfo_empl/IsActiveEntity">
+                                                                                                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                                                </Annotations>
+                                                                                                                                                <Annotations Target="HRService.ProjectsInfo_empl/HasActiveEntity">
+                                                                                                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                                                </Annotations>
+                                                                                                                                                <Annotations Target="HRService.ProjectsInfo_empl/HasDraftEntity">
+                                                                                                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                                                </Annotations>
+                                                                                                                                                <Annotations Target="HRService.ProjectsInfo_empl/DraftAdministrativeData">
+                                                                                                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                                                </Annotations>
+                                                                                                                                                <Annotations Target="HRService.EntityContainer/ProjectsInfo_proj">
+                                                                                                                                                    <Annotation Term="Common.DraftNode">
+                                                                                                                                                        <Record Type="Common.DraftNodeType">
+                                                                                                                                                            <PropertyValue Property="PreparationAction" String="HRService.draftPrepare"/>
+                                                                                                                                                        </Record>
+                                                                                                                                                    </Annotation>
+                                                                                                                                                </Annotations>
+                                                                                                                                                <Annotations Target="HRService.ProjectsInfo_proj/createdAt">
+                                                                                                                                                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                                                                                                    <Annotation Term="Core.Immutable" Bool="true"/>
+                                                                                                                                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                                                                                    <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                                                                                                                                                    </Annotations>
+                                                                                                                                                    <Annotations Target="HRService.ProjectsInfo_proj/createdBy">
+                                                                                                                                                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                                                                                                        <Annotation Term="Core.Immutable" Bool="true"/>
+                                                                                                                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                                                                                        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                                                                                                                            <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                                                                                                                                                            </Annotations>
+                                                                                                                                                            <Annotations Target="HRService.ProjectsInfo_proj/modifiedAt">
+                                                                                                                                                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                                                                                                                <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                                                                                                <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                                                                                                                                                                </Annotations>
+                                                                                                                                                                <Annotations Target="HRService.ProjectsInfo_proj/modifiedBy">
+                                                                                                                                                                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                                                                                                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                                                                                                    <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                                                                                                                                        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                                                                                                                                                        </Annotations>
+                                                                                                                                                                        <Annotations Target="HRService.ProjectsInfo_proj/projects_ID">
+                                                                                                                                                                            <Annotation Term="Common.Text" Path="projects/projectTitle">
+                                                                                                                                                                                <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                                                                                                                                                                            </Annotation>
+                                                                                                                                                                            <Annotation Term="Common.ValueList">
+                                                                                                                                                                                <Record Type="Common.ValueListType">
+                                                                                                                                                                                    <PropertyValue Property="CollectionPath" String="Project"/>
+                                                                                                                                                                                    <PropertyValue Property="Parameters">
+                                                                                                                                                                                        <Collection>
+                                                                                                                                                                                            <Record Type="Common.ValueListParameterInOut">
+                                                                                                                                                                                                <PropertyValue Property="LocalDataProperty" PropertyPath="projects_ID"/>
+                                                                                                                                                                                                <PropertyValue Property="ValueListProperty" String="ID"/>
+                                                                                                                                                                                            </Record>
+                                                                                                                                                                                        </Collection>
+                                                                                                                                                                                    </PropertyValue>
+                                                                                                                                                                                </Record>
+                                                                                                                                                                            </Annotation>
+                                                                                                                                                                        </Annotations>
+                                                                                                                                                                        <Annotations Target="HRService.ProjectsInfo_proj/salary_currency">
+                                                                                                                                                                            <Annotation Term="Common.Label" String="{i18n>Currency}"/>
+                                                                                                                                                                                <Annotation Term="Core.Description" String="{i18n>CurrencyCode.Description}"/>
+                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                <Annotations Target="HRService.ProjectsInfo_proj/salary_currency_code">
+                                                                                                                                                                                    <Annotation Term="Common.Label" String="{i18n>Currency}"/>
+                                                                                                                                                                                        <Annotation Term="Common.ValueList">
+                                                                                                                                                                                            <Record Type="Common.ValueListType">
+                                                                                                                                                                                                <PropertyValue Property="Label" String="{i18n>Currency}"/>
+                                                                                                                                                                                                    <PropertyValue Property="CollectionPath" String="Currencies"/>
+                                                                                                                                                                                                    <PropertyValue Property="Parameters">
+                                                                                                                                                                                                        <Collection>
+                                                                                                                                                                                                            <Record Type="Common.ValueListParameterInOut">
+                                                                                                                                                                                                                <PropertyValue Property="LocalDataProperty" PropertyPath="salary_currency_code"/>
+                                                                                                                                                                                                                <PropertyValue Property="ValueListProperty" String="code"/>
+                                                                                                                                                                                                            </Record>
+                                                                                                                                                                                                            <Record Type="Common.ValueListParameterDisplayOnly">
+                                                                                                                                                                                                                <PropertyValue Property="ValueListProperty" String="name"/>
+                                                                                                                                                                                                            </Record>
+                                                                                                                                                                                                        </Collection>
+                                                                                                                                                                                                    </PropertyValue>
+                                                                                                                                                                                                </Record>
+                                                                                                                                                                                            </Annotation>
+                                                                                                                                                                                            <Annotation Term="Core.Description" String="{i18n>CurrencyCode.Description}"/>
+                                                                                                                                                                                            </Annotations>
+                                                                                                                                                                                            <Annotations Target="HRService.ProjectsInfo_proj/local_currency">
+                                                                                                                                                                                                <Annotation Term="Common.Label" String="{i18n>Currency}"/>
+                                                                                                                                                                                                    <Annotation Term="Core.Description" String="{i18n>CurrencyCode.Description}"/>
+                                                                                                                                                                                                    </Annotations>
+                                                                                                                                                                                                    <Annotations Target="HRService.ProjectsInfo_proj/local_currency_code">
+                                                                                                                                                                                                        <Annotation Term="Common.Label" String="{i18n>Currency}"/>
+                                                                                                                                                                                                            <Annotation Term="Common.ValueList">
+                                                                                                                                                                                                                <Record Type="Common.ValueListType">
+                                                                                                                                                                                                                    <PropertyValue Property="Label" String="{i18n>Currency}"/>
+                                                                                                                                                                                                                        <PropertyValue Property="CollectionPath" String="Currencies"/>
+                                                                                                                                                                                                                        <PropertyValue Property="Parameters">
+                                                                                                                                                                                                                            <Collection>
+                                                                                                                                                                                                                                <Record Type="Common.ValueListParameterInOut">
+                                                                                                                                                                                                                                    <PropertyValue Property="LocalDataProperty" PropertyPath="local_currency_code"/>
+                                                                                                                                                                                                                                    <PropertyValue Property="ValueListProperty" String="code"/>
+                                                                                                                                                                                                                                </Record>
+                                                                                                                                                                                                                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                                                                                                                                                                                                                    <PropertyValue Property="ValueListProperty" String="name"/>
+                                                                                                                                                                                                                                </Record>
+                                                                                                                                                                                                                            </Collection>
+                                                                                                                                                                                                                        </PropertyValue>
+                                                                                                                                                                                                                    </Record>
+                                                                                                                                                                                                                </Annotation>
+                                                                                                                                                                                                                <Annotation Term="Core.Description" String="{i18n>CurrencyCode.Description}"/>
+                                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                                                <Annotations Target="HRService.ProjectsInfo_proj/IsActiveEntity">
+                                                                                                                                                                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                                                <Annotations Target="HRService.ProjectsInfo_proj/HasActiveEntity">
+                                                                                                                                                                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                                                <Annotations Target="HRService.ProjectsInfo_proj/HasDraftEntity">
+                                                                                                                                                                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                                                <Annotations Target="HRService.ProjectsInfo_proj/DraftAdministrativeData">
+                                                                                                                                                                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                                                <Annotations Target="HRService.EntityContainer/Accounting">
+                                                                                                                                                                                                                    <Annotation Term="Capabilities.DeleteRestrictions">
+                                                                                                                                                                                                                        <Record Type="Capabilities.DeleteRestrictionsType">
+                                                                                                                                                                                                                            <PropertyValue Property="Deletable" Bool="false"/>
+                                                                                                                                                                                                                        </Record>
+                                                                                                                                                                                                                    </Annotation>
+                                                                                                                                                                                                                    <Annotation Term="Capabilities.InsertRestrictions">
+                                                                                                                                                                                                                        <Record Type="Capabilities.InsertRestrictionsType">
+                                                                                                                                                                                                                            <PropertyValue Property="Insertable" Bool="false"/>
+                                                                                                                                                                                                                        </Record>
+                                                                                                                                                                                                                    </Annotation>
+                                                                                                                                                                                                                    <Annotation Term="Capabilities.UpdateRestrictions">
+                                                                                                                                                                                                                        <Record Type="Capabilities.UpdateRestrictionsType">
+                                                                                                                                                                                                                            <PropertyValue Property="Updatable" Bool="false"/>
+                                                                                                                                                                                                                        </Record>
+                                                                                                                                                                                                                    </Annotation>
+                                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                                                <Annotations Target="HRService.Accounting/createdAt">
+                                                                                                                                                                                                                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                                                                                                                                                                    <Annotation Term="Core.Immutable" Bool="true"/>
+                                                                                                                                                                                                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                                                                                                                                                    <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                                                                                                                                                                                                                    </Annotations>
+                                                                                                                                                                                                                    <Annotations Target="HRService.Accounting/createdBy">
+                                                                                                                                                                                                                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                                                                                                                                                                        <Annotation Term="Core.Immutable" Bool="true"/>
+                                                                                                                                                                                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                                                                                                                                                        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                                                                                                                                                                                            <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                                                                                                                                                                                                                            </Annotations>
+                                                                                                                                                                                                                            <Annotations Target="HRService.Accounting/modifiedAt">
+                                                                                                                                                                                                                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                                                                                                                                                                                <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                                                                                                                                                                <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                                                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                                                                <Annotations Target="HRService.Accounting/modifiedBy">
+                                                                                                                                                                                                                                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                                                                                                                                                                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                                                                                                                                                                    <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                                                                                                                                                                                                        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                                                                                                                                                                                                                        </Annotations>
+                                                                                                                                                                                                                                        <Annotations Target="HRService.Accounting/projectLogo">
+                                                                                                                                                                                                                                            <Annotation Term="Core.MediaType" String="image/jpg"/>
+                                                                                                                                                                                                                                        </Annotations>
+                                                                                                                                                                                                                                        <Annotations Target="HRService.AssesmentDepartment/isOutdated">
+                                                                                                                                                                                                                                            <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                                                                                                                                                                        </Annotations>
+                                                                                                                                                                                                                                        <Annotations Target="HRService.Countries">
+                                                                                                                                                                                                                                            <Annotation Term="UI.Identification">
+                                                                                                                                                                                                                                                <Collection>
+                                                                                                                                                                                                                                                    <Record Type="UI.DataField">
+                                                                                                                                                                                                                                                        <PropertyValue Property="Value" Path="name"/>
+                                                                                                                                                                                                                                                    </Record>
+                                                                                                                                                                                                                                                </Collection>
+                                                                                                                                                                                                                                            </Annotation>
+                                                                                                                                                                                                                                        </Annotations>
+                                                                                                                                                                                                                                        <Annotations Target="HRService.Countries/name">
+                                                                                                                                                                                                                                            <Annotation Term="Common.Label" String="{i18n>Name}"/>
+                                                                                                                                                                                                                                            </Annotations>
+                                                                                                                                                                                                                                            <Annotations Target="HRService.Countries/descr">
+                                                                                                                                                                                                                                                <Annotation Term="Common.Label" String="{i18n>Description}"/>
+                                                                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                                                                                <Annotations Target="HRService.Countries/code">
+                                                                                                                                                                                                                                                    <Annotation Term="Common.Text" Path="name"/>
+                                                                                                                                                                                                                                                    <Annotation Term="Common.Label" String="{i18n>CountryCode}"/>
+                                                                                                                                                                                                                                                    </Annotations>
+                                                                                                                                                                                                                                                    <Annotations Target="HRService.Currencies">
+                                                                                                                                                                                                                                                        <Annotation Term="UI.Identification">
+                                                                                                                                                                                                                                                            <Collection>
+                                                                                                                                                                                                                                                                <Record Type="UI.DataField">
+                                                                                                                                                                                                                                                                    <PropertyValue Property="Value" Path="name"/>
+                                                                                                                                                                                                                                                                </Record>
+                                                                                                                                                                                                                                                            </Collection>
+                                                                                                                                                                                                                                                        </Annotation>
+                                                                                                                                                                                                                                                    </Annotations>
+                                                                                                                                                                                                                                                    <Annotations Target="HRService.Currencies/name">
+                                                                                                                                                                                                                                                        <Annotation Term="Common.Label" String="{i18n>Name}"/>
+                                                                                                                                                                                                                                                        </Annotations>
+                                                                                                                                                                                                                                                        <Annotations Target="HRService.Currencies/descr">
+                                                                                                                                                                                                                                                            <Annotation Term="Common.Label" String="{i18n>Description}"/>
+                                                                                                                                                                                                                                                            </Annotations>
+                                                                                                                                                                                                                                                            <Annotations Target="HRService.Currencies/code">
+                                                                                                                                                                                                                                                                <Annotation Term="Common.Text" Path="name"/>
+                                                                                                                                                                                                                                                                <Annotation Term="Common.Label" String="{i18n>CurrencyCode}"/>
+                                                                                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                                                                                                <Annotations Target="HRService.Currencies/symbol">
+                                                                                                                                                                                                                                                                    <Annotation Term="Common.Label" String="{i18n>CurrencySymbol}"/>
+                                                                                                                                                                                                                                                                    </Annotations>
+                                                                                                                                                                                                                                                                    <Annotations Target="HRService.DraftAdministrativeData">
+                                                                                                                                                                                                                                                                        <Annotation Term="Common.Label" String="{i18n>Draft_DraftAdministrativeData}"/>
+                                                                                                                                                                                                                                                                        </Annotations>
+                                                                                                                                                                                                                                                                        <Annotations Target="HRService.DraftAdministrativeData/DraftUUID">
+                                                                                                                                                                                                                                                                            <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                                                                                                                                                                            <Annotation Term="Common.Label" String="{i18n>Draft_DraftUUID}"/>
+                                                                                                                                                                                                                                                                            </Annotations>
+                                                                                                                                                                                                                                                                            <Annotations Target="HRService.DraftAdministrativeData/CreationDateTime">
+                                                                                                                                                                                                                                                                                <Annotation Term="Common.Label" String="{i18n>Draft_CreationDateTime}"/>
+                                                                                                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                                                                                                                <Annotations Target="HRService.DraftAdministrativeData/CreatedByUser">
+                                                                                                                                                                                                                                                                                    <Annotation Term="Common.Label" String="{i18n>Draft_CreatedByUser}"/>
+                                                                                                                                                                                                                                                                                    </Annotations>
+                                                                                                                                                                                                                                                                                    <Annotations Target="HRService.DraftAdministrativeData/DraftIsCreatedByMe">
+                                                                                                                                                                                                                                                                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                                                                                                                                                                                        <Annotation Term="Common.Label" String="{i18n>Draft_DraftIsCreatedByMe}"/>
+                                                                                                                                                                                                                                                                                        </Annotations>
+                                                                                                                                                                                                                                                                                        <Annotations Target="HRService.DraftAdministrativeData/LastChangeDateTime">
+                                                                                                                                                                                                                                                                                            <Annotation Term="Common.Label" String="{i18n>Draft_LastChangeDateTime}"/>
+                                                                                                                                                                                                                                                                                            </Annotations>
+                                                                                                                                                                                                                                                                                            <Annotations Target="HRService.DraftAdministrativeData/LastChangedByUser">
+                                                                                                                                                                                                                                                                                                <Annotation Term="Common.Label" String="{i18n>Draft_LastChangedByUser}"/>
+                                                                                                                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                                                                                                                                <Annotations Target="HRService.DraftAdministrativeData/InProcessByUser">
+                                                                                                                                                                                                                                                                                                    <Annotation Term="Common.Label" String="{i18n>Draft_InProcessByUser}"/>
+                                                                                                                                                                                                                                                                                                    </Annotations>
+                                                                                                                                                                                                                                                                                                    <Annotations Target="HRService.DraftAdministrativeData/DraftIsProcessedByMe">
+                                                                                                                                                                                                                                                                                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                                                                                                                                                                                                        <Annotation Term="Common.Label" String="{i18n>Draft_DraftIsProcessedByMe}"/>
+                                                                                                                                                                                                                                                                                                        </Annotations>
+                                                                                                                                                                                                                                                                                                        <Annotations Target="HRService.Countries_texts/locale">
+                                                                                                                                                                                                                                                                                                            <Annotation Term="Common.Label" String="{i18n>LanguageCode}"/>
+                                                                                                                                                                                                                                                                                                            </Annotations>
+                                                                                                                                                                                                                                                                                                            <Annotations Target="HRService.Countries_texts/name">
+                                                                                                                                                                                                                                                                                                                <Annotation Term="Common.Label" String="{i18n>Name}"/>
+                                                                                                                                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                                                                                                                                                <Annotations Target="HRService.Countries_texts/descr">
+                                                                                                                                                                                                                                                                                                                    <Annotation Term="Common.Label" String="{i18n>Description}"/>
+                                                                                                                                                                                                                                                                                                                    </Annotations>
+                                                                                                                                                                                                                                                                                                                    <Annotations Target="HRService.Countries_texts/code">
+                                                                                                                                                                                                                                                                                                                        <Annotation Term="Common.Text" Path="name"/>
+                                                                                                                                                                                                                                                                                                                        <Annotation Term="Common.Label" String="{i18n>CountryCode}"/>
+                                                                                                                                                                                                                                                                                                                        </Annotations>
+                                                                                                                                                                                                                                                                                                                        <Annotations Target="HRService.Currencies_texts/locale">
+                                                                                                                                                                                                                                                                                                                            <Annotation Term="Common.Label" String="{i18n>LanguageCode}"/>
+                                                                                                                                                                                                                                                                                                                            </Annotations>
+                                                                                                                                                                                                                                                                                                                            <Annotations Target="HRService.Currencies_texts/name">
+                                                                                                                                                                                                                                                                                                                                <Annotation Term="Common.Label" String="{i18n>Name}"/>
+                                                                                                                                                                                                                                                                                                                                </Annotations>
+                                                                                                                                                                                                                                                                                                                                <Annotations Target="HRService.Currencies_texts/descr">
+                                                                                                                                                                                                                                                                                                                                    <Annotation Term="Common.Label" String="{i18n>Description}"/>
+                                                                                                                                                                                                                                                                                                                                    </Annotations>
+                                                                                                                                                                                                                                                                                                                                    <Annotations Target="HRService.Currencies_texts/code">
+                                                                                                                                                                                                                                                                                                                                        <Annotation Term="Common.Text" Path="name"/>
+                                                                                                                                                                                                                                                                                                                                        <Annotation Term="Common.Label" String="{i18n>CurrencyCode}"/>
+                                                                                                                                                                                                                                                                                                                                        </Annotations>
+                                                                                                                                                                                                                                                                                                                                    </Schema>
+                                                                                                                                                                                                                                                                                                                                </edmx:DataServices>
+                                                                                                                                                                                                                                                                                                                            </edmx:Edmx>

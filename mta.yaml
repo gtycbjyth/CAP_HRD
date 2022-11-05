@@ -74,9 +74,23 @@ modules:
       - nsemployee.zip
       name: nsemployee
       target-path: resources/
+    - artifacts:
+      - nsproject.zip
+      name: nsproject
+      target-path: resources/
 - name: nsemployee
   type: html5
   path: app/employee
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: nsproject
+  type: html5
+  path: app/project
   build-parameters:
     build-result: dist
     builder: custom

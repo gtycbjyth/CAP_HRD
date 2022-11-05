@@ -21,7 +21,7 @@
         "undeploy": "cf undeploy HRD --delete-services --delete-service-keys --delete-service-brokers",
         "build": "rimraf resources mta_archives && mbt build --mtar archive",
         "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
-        "watch-project": "cds watch --open project/webapp/index.html?sap-ui-xx-viewCache=false"
+        "watch-accounting": "cds watch --open accounting/webapp/index.html?sap-ui-xx-viewCache=false"
     },
     "engines": {
         "node": "^16.15"
@@ -60,6 +60,7 @@
     },
     "sapux": [
         "app/employee",
-        "app/project"
+        "app/project",
+        "app/accounting"
     ]
 }

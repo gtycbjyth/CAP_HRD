@@ -78,6 +78,10 @@ modules:
       - nsproject.zip
       name: nsproject
       target-path: resources/
+    - artifacts:
+     - nsaccounting.zip
+      name: nsaccounting
+      target-path: resources/
 - name: nsemployee
   type: html5
   path: app/employee
@@ -91,6 +95,16 @@ modules:
 - name: nsproject
   type: html5
   path: app/project
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: nsaccounting
+  type: html5
+  path: app/accounting
   build-parameters:
     build-result: dist
     builder: custom

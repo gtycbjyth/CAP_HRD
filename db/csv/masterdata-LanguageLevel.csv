@@ -1,0 +1,28 @@
+level,criticality
+N/A,1
+A0,0
+A1,5
+A1 Outdated,2
+A1+,5
+A1+ Outdated,2
+A2,5
+A2 Outdated,2
+A2+,5
+A2+ Outdated,2
+B1,5
+B1 Outdated,2
+B1+,5
+B1+ Outdated,2
+B2,5
+B2 Outdated,2
+B2+,5
+B2+ Outdated,2
+C1,5
+C1 Outdated,2
+C1+,5
+C1+ Outdated,2
+C2,5
+C2 Outdated,2
+C2+,5
+C2+ Outdated,2
+Native,3

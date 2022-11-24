@@ -17,7 +17,8 @@ service HRService {
     entity ProjectsInfo_empl   as projection on hrd.ProjectInfo {
         *,
         employees : redirected to Employee
-    };
+    }actions {action setSalary(salary: Integer)}
+     ;
 
     entity ProjectsInfo_proj   as projection on hrd.ProjectInfo {
         *,
@@ -28,8 +29,10 @@ service HRService {
     @cds.redirection.target
     entity Accounting          as projection on hrd.Project {
         *,
-        employees : redirected to ProjectsInfo_empl
-    };
+        employees : redirected to ProjectsInfo_empl 
+    } /* actions {
+        action setSalary(Salary: Integer)
+    } */;
 
     entity AssesmentDepartment as projection on hrd.AssesmentDepartment;
     entity LanguageLevel       as projection on masterdata.LanguageLevel;

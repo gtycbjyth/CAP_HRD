@@ -1,13 +1,41 @@
 const cds = require('@sap/cds');
 const { validator } = require('./assets/validator')
+const constants = require('./assets/constants')
 
 class HRService extends cds.ApplicationService {
     async init() {
+        this.on('setSalary', '*', async req => {
+            try {
+                const { ProjectsInfo_proj, Employee, Project } = this.entities;
+                const { salary } = req.data;
+                const [ID, { ID: projID }] = req.params;
+
+                const [projectInfo] = await SELECT(ProjectsInfo_proj).where({ ID: projID });
+                const [project] = await SELECT(Project).where({ ID: projectInfo.projects_ID });
+                const [employee] = await SELECT(Employee).where({ ID: projectInfo.employees_ID });
+
+                const dataForCPI = {
+                    salary: salary,
+                    salary_currency_code: project.salary_currency_code,
+                    local_currency_code: employee.local_currency_code
+                }
+
+                const converterCPI = await cds.connect.to('CPIConverter');
+                const converterResponse = await converterCPI.tx(req).post('/converter', dataForCPI);
+                await UPDATE(ProjectsInfo_proj, { ID: projID }).set(converterResponse);
+            } catch (error) {
+                console.log(error);
+                return req.error(400, constants.genericError.salaryNotSet);
+            }
+
+        });
+
         this.before('NEW', 'Employee', async req => {
             try {
                 req.data.image = ''
             } catch (error) {
-                throw new Error(error.message)
+                console.log(error);
+                return req.error(400, constants.genericError.unexpected);
             }
         });
 
@@ -19,15 +47,16 @@ class HRService extends cds.ApplicationService {
                     if (isURL) {
                         req.data.image = req.data.imageUrl;
                     } else {
-                        throw new Error('Invalid Image URL. URL should have protocol(https:// or http://) and Fully Qualified Domain Name.')
+                        return req.error(400, constants.genericError.invalidURL);
                     }
                 }
             } catch (error) {
-                throw new Error(error.message)
+                console.log(error);
+                return req.error(400, constants.genericError.unexpected);
             }
         })
 
-        await super.init()
+        return await super.init()
     }
 }
 

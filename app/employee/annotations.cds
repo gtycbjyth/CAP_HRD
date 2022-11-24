@@ -73,6 +73,11 @@ annotate service.Employee with @(
                 Label : '{i18n>imageUrl}',
                 Value : imageUrl,
             },
+            {
+                $Type : 'UI.DataField',
+                Value : local_currency_code,
+                Label : '{i18n>currency}',
+            },
         ],
     },
     UI.Facets : [

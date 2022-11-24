@@ -93,7 +93,6 @@
             "css": []
         },
         "routing": {
-            "config": {},
             "routes": [
                 {
                     "pattern": ":?query:",
@@ -104,6 +103,11 @@
                     "pattern": "Accounting({key}):?query:",
                     "name": "AccountingObjectPage",
                     "target": "AccountingObjectPage"
+                },
+                {
+                    "pattern": "Accounting({key})/employees({key2}):?query:",
+                    "name": "ProjectsInfo_emplObjectPage_employees",
+                    "target": "ProjectsInfo_emplObjectPage_employees"
                 }
             ],
             "targets": {
@@ -132,7 +136,25 @@
                     "options": {
                         "settings": {
                             "editableHeaderContent": false,
-                            "entitySet": "Accounting"
+                            "entitySet": "Accounting",
+                            "navigation": {
+                                "employees": {
+                                    "detail": {
+                                        "route": "ProjectsInfo_emplObjectPage_employees"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "ProjectsInfo_emplObjectPage_employees": {
+                    "type": "Component",
+                    "id": "ProjectsInfo_emplObjectPage_employees",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "entitySet": "ProjectsInfo_empl",
+                            "navigation": {}
                         }
                     }
                 }

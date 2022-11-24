@@ -41,6 +41,11 @@ annotate service.Project with @(UI : {
                 Label : '{i18n>members}',
                 Value : employees.employees_ID,
             },
+            {
+                $Type : 'UI.DataField',
+                Value : salary_currency_code,
+                Label : '{i18n>currency}',
+            },
         ],
     },
     FieldGroup #AdministrativeData : {Data : [

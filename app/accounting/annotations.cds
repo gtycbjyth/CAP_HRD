@@ -38,7 +38,7 @@ annotate service.Accounting with @(
     UI.Facets : [
         {
             $Type : 'UI.ReferenceFacet',
-            Label : '{i18n>members}',
+            Label : '{i18n>membersSalary}',
             ID : 'i18nmembers',
             Target : 'employees/@UI.LineItem#i18nmembers',
         },
@@ -94,6 +94,86 @@ annotate service.Accounting with @(
             },{
                 $Type : 'UI.DataField',
                 Value : employees.projects.projectTitle,
+            },],
+    }
+);
+annotate service.ProjectsInfo_empl with @(
+    UI.Identification : []
+);
+annotate service.ProjectsInfo_empl with @(
+    UI.HeaderFacets : [
+        {
+            $Type : 'UI.ReferenceFacet',
+            Label : 'Project Info',
+            ID : 'ProjectInfo',
+            Target : '@UI.FieldGroup#ProjectInfo',
+        },
+    ],
+    UI.FieldGroup #ProjectInfo : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : projects.projectTitle,
+                Label : 'projectTitle',
+            },{
+                $Type : 'UI.DataField',
+                Value : projects.projectLogo,
+                Label : 'projectLogo',
+            },],
+    }
+);
+annotate service.ProjectsInfo_empl with @(
+    UI.Facets : [
+        {
+            $Type : 'UI.ReferenceFacet',
+            Label : 'Employee',
+            ID : 'Employee',
+            Target : '@UI.FieldGroup#Employee',
+        },
+    ],
+    UI.FieldGroup #Employee : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : employees.image,
+                Label : 'image',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : employees.fullName,
+                Label : 'fullName',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : employees.jobFunction_title,
+                Label : 'jobFunction_title',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : employees.jobStatus_status,
+                Label : 'jobStatus_status',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : employees.languageLevel_level,
+                Label : 'languageLevel_level',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : salary,
+                Label : 'salary',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : local_salary,
+                Label : 'local_salary',
+            },
+            {
+                $Type : 'UI.DataFieldForAction',
+                Action : 'HRService.setSalary',
+                Label : 'setSalary',
             },],
     }
 );

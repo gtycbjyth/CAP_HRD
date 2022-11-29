@@ -1,6 +1,7 @@
 const cds = require('@sap/cds');
-const { validator } = require('./assets/validator')
-const constants = require('./assets/constants')
+const { validator } = require('./assets/validator');
+const constants = require('./assets/constants');
+const { checkAssessmentPeriod } = require('./assets/helpers');
 
 class HRService extends cds.ApplicationService {
     async init() {
@@ -50,6 +51,45 @@ class HRService extends cds.ApplicationService {
                         return req.error(400, constants.genericError.invalidURL);
                     }
                 }
+            } catch (error) {
+                console.log(error);
+                return req.error(400, constants.genericError.unexpected);
+            }
+        });
+
+        this.after('READ', 'Employee', async req => { // check activation assessment button
+            if (req.assesmentDate !== null) {
+                const assesmentDate = new Date(req.assesmentDate)
+                if (checkAssessmentPeriod(assesmentDate)) {
+                    req.assessmentEvalable = true;
+                } else {
+                    req.assessmentEvalable = false;
+                }
+            }else {
+                req.assessmentEvalable = true;
+            }
+        });
+
+
+
+        this.on('setAssesmentDate', 'Employee', async req => {
+            try {
+                if (req.data.date === null) {
+                    return req.error(400, constants.genericError.emptyAssessmentDate)
+                };
+
+                const dateNow = new Date();
+                const date = new Date(req.data.date);
+                console.log(dateNow - date > 0);
+
+                if (dateNow - date > 0) {
+                    return req.error(400, constants.genericError.vrongAssessmentDate)
+                };
+
+                const { Employee } = this.entities;
+                const [{ ID: ID }] = req.params;
+
+                await UPDATE(Employee, { ID: ID }).with({ assesmentDate: req.data.date });
             } catch (error) {
                 console.log(error);
                 return req.error(400, constants.genericError.unexpected);

@@ -22,6 +22,7 @@ entity Employee : managed {
         image          : LargeString  @Core.IsURL  @Core.MediaType : 'image/jpg';
         languageLevel  : Association to masterdata.LanguageLevel;
         assesmentDate  : Date;
+        virtual assessmentEvalable: Boolean;
 }
 
 entity Project : managed {

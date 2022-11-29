@@ -237,3 +237,12 @@ annotate service.Employee with @(
             },],
     }
 );
+annotate service.Employee with @(
+    UI.Identification : [
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'HRService.setAssesmentDate',
+            Label : 'setAssesmentDate',
+        },
+    ]
+);
